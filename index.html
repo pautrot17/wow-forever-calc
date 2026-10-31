@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WoW Forever - Simulateur de Talents & DPS</title>
+    <title>WoW Forever - Hub Communautaire & Outils</title>
     <style>
         :root {
-            --bg-color: #0f1115;
-            --panel-bg: #181c24;
-            --border-color: #2e3846;
+            --bg-main: #0b0d12;
+            --bg-panel: #141820;
+            --bg-card: #1c222d;
+            --border-color: #2a3447;
             --accent-gold: #f4c430;
             --text-main: #e2e8f0;
             --text-muted: #94a3b8;
+            --highlight: #3b82f6;
         }
 
         * {
@@ -22,300 +24,392 @@
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-main);
             color: var(--text-main);
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 480px;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            padding: 20px;
         }
 
         header {
             text-align: center;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
         }
 
         header h1 {
-            font-size: 1.25rem;
+            font-size: 2rem;
             color: var(--accent-gold);
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         header p {
-            font-size: 0.8rem;
             color: var(--text-muted);
+            font-size: 0.95rem;
         }
 
-        .section-title {
-            font-size: 0.9rem;
+        /* Navigation par onglets du site */
+        .site-nav {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .nav-btn {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .nav-btn.active {
+            background: var(--bg-card);
+            color: var(--accent-gold);
+            border-color: var(--accent-gold);
+        }
+
+        .tab-content {
+            display: none;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Layout Simulateur */
+        .sim-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr 300px;
+            gap: 20px;
+        }
+
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .panel h3 {
+            font-size: 1rem;
+            color: var(--accent-gold);
+            margin-bottom: 12px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-            margin-top: 12px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
         }
 
-        /* Class Selector */
+        /* Classes Grid */
         .classes-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: 1fr;
             gap: 6px;
-            margin-bottom: 14px;
         }
 
         .class-btn {
-            background: #212833;
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 6px;
+            padding: 8px 12px;
             border-radius: 6px;
-            font-size: 0.75rem;
             cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-        }
-
-        .class-btn.active {
-            border-color: var(--accent-gold);
-            background: #2b3342;
-            color: var(--accent-gold);
-            font-weight: bold;
-        }
-
-        /* Stats Bar */
-        .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            background: #111419;
-            padding: 10px 14px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 14px;
+            text-align: left;
             font-size: 0.9rem;
+            transition: all 0.2s;
         }
 
-        .stat-item span {
+        .class-btn:hover, .class-btn.active {
+            border-color: var(--accent-gold);
             color: var(--accent-gold);
-            font-weight: bold;
+            background: #232b38;
         }
 
-        /* Trees Tabs */
+        /* Arbres & Talents */
         .tree-tabs {
             display: flex;
-            gap: 6px;
-            margin-bottom: 12px;
+            gap: 8px;
+            margin-bottom: 16px;
         }
 
         .tree-tab {
             flex: 1;
-            background: #212833;
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
             color: var(--text-muted);
-            padding: 8px 4px;
+            padding: 8px;
             border-radius: 6px;
-            font-size: 0.75rem;
             cursor: pointer;
             text-align: center;
+            font-size: 0.85rem;
         }
 
         .tree-tab.active {
-            background: #2b3342;
+            background: #232b38;
             color: var(--text-main);
-            border-color: var(--text-muted);
+            border-color: var(--text-main);
             font-weight: bold;
         }
 
-        /* Talents List */
-        .talents-list {
+        .talents-grid {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 14px;
-            max-height: 280px;
+            gap: 10px;
+            max-height: 450px;
             overflow-y: auto;
             padding-right: 4px;
         }
 
         .talent-card {
-            background: #212833;
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 10px;
+            padding: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .talent-info h3 {
-            font-size: 0.85rem;
-            margin-bottom: 2px;
+        .talent-info h4 {
+            font-size: 0.95rem;
+            margin-bottom: 4px;
         }
 
         .talent-info p {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
         }
 
         .talent-controls {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .talent-controls button {
-            width: 26px;
-            height: 26px;
-            background: #2d3748;
+            width: 28px;
+            height: 28px;
+            background: #2a3447;
             border: 1px solid var(--border-color);
             color: white;
-            border-radius: 4px;
+            border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        .talent-controls button:active {
+        .talent-controls button:hover {
             background: var(--accent-gold);
             color: black;
         }
 
         .talent-controls span {
-            font-size: 0.85rem;
-            min-width: 24px;
+            font-size: 0.95rem;
+            min-width: 25px;
             text-align: center;
-        }
-
-        /* Comparator Section */
-        .comparator-box {
-            background: #111419;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px;
-        }
-
-        .comparator-buttons {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
-        .action-btn {
-            flex: 1;
-            background: #2d3748;
-            border: 1px solid var(--border-color);
-            color: white;
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            cursor: pointer;
             font-weight: bold;
         }
 
-        .action-btn:active {
+        /* Panneau Stats & Comparateur */
+        .stats-box {
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 16px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .stat-row span {
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+
+        .action-btn {
+            width: 100%;
+            background: #2a3447;
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 8px;
+            transition: background 0.2s;
+        }
+
+        .action-btn:hover {
             background: var(--accent-gold);
             color: black;
         }
 
-        .compare-results {
-            font-size: 0.8rem;
+        .compare-cols {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
+            margin-top: 10px;
+            font-size: 0.85rem;
             text-align: center;
         }
 
-        .compare-col {
-            background: #181c24;
+        .compare-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
             padding: 8px;
             border-radius: 6px;
-            border: 1px solid var(--border-color);
         }
 
-        .compare-col h4 {
+        /* Section Pré-BiS Stuff */
+        .bis-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        .slot-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .slot-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .slot-item:hover, .slot-item.active {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+
+        .item-details {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .item-details h4 {
+            color: var(--accent-gold);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .item-details p {
             color: var(--text-muted);
-            margin-bottom: 4px;
-            font-size: 0.75rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 8px;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>WoW Forever - Talents & DPS</h1>
-        <p>Simulateur mobile optimisé</p>
-    </header>
+<header>
+    <h1>World of Warcraft: Forever</h1>
+    <p>Portail de Theorycrafting & Optimisation des équipements</p>
+</header>
 
-    <!-- Sélecteur de classe -->
-    <div class="section-title">Classe</div>
-    <div class="classes-grid" id="classGrid"></div>
+<div class="site-nav">
+    <button class="nav-btn active" onclick="switchTab('sim')">Simulateur de Talents & DPS</button>
+    <button class="nav-btn" onclick="switchTab('bis')">Guide Stuff Pré-BiS</button>
+</div>
 
-    <!-- Stats globales -->
-    <div class="stats-bar">
-        <div class="stat-item">Points : <span id="pointsUsed">0</span>/51</div>
-        <div class="stat-item">DPS Estimé : <span id="dpsScore">1000</span></div>
-    </div>
+<!-- ONGLET 1 : SIMULATEUR -->
+<div id="sim" class="tab-content active">
+    <div class="sim-layout">
+        <!-- Classes -->
+        <div class="panel">
+            <h3>Classes</h3>
+            <div class="classes-grid" id="classGrid"></div>
+        </div>
 
-    <!-- Onglets des arbres -->
-    <div class="tree-tabs" id="treeTabs"></div>
+        <!-- Arbre central -->
+        <div class="panel">
+            <h3>Arbre de Talents</h3>
+            <div class="tree-tabs" id="treeTabs"></div>
+            <div class="talents-grid" id="talentsList"></div>
+        </div>
 
-    <!-- Liste des talents -->
-    <div class="talents-list" id="talentsList"></div>
-
-    <!-- Comparateur -->
-    <div class="comparator-box">
-        <div class="section-title" style="margin-top:0;">Comparateur de Builds</div>
-        <div class="comparator-buttons">
+        <!-- Stats & Comparateur -->
+        <div class="panel">
+            <h3>Performances</h3>
+            <div class="stats-box">
+                <div class="stat-row">Points dépensés : <span id="pointsUsed">0</span>/51</div>
+                <div class="stat-row">DPS Théorique : <span id="dpsScore">1000</span></div>
+            </div>
+            
+            <h3>Comparateur</h3>
             <button class="action-btn" onclick="saveBuild(1)">Enregistrer Build 1</button>
             <button class="action-btn" onclick="saveBuild(2)">Enregistrer Build 2</button>
-        </div>
-        <div class="compare-results">
-            <div class="compare-col" id="build1Display">
-                <h4>Build 1</h4>
-                <div>Aucun</div>
-            </div>
-            <div class="compare-col" id="build2Display">
-                <h4>Build 2</h4>
-                <div>Aucun</div>
+            
+            <div class="compare-cols">
+                <div class="compare-card" id="b1View">
+                    <strong>Build 1</strong><br><span>Aucun</span>
+                </div>
+                <div class="compare-card" id="b2View">
+                    <strong>Build 2</strong><br><span>Aucun</span>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- ONGLET 2 : STUFF PRE-BIS -->
+<div id="bis" class="tab-content">
+    <div class="bis-layout">
+        <div class="panel">
+            <h3>Emplacements d'équipement</h3>
+            <div class="slot-list" id="slotList">
+                <div class="slot-item active" onclick="selectSlot('Tête')"><span>Tête</span> 🛡️</div>
+                <div class="slot-item" onclick="selectSlot('Épaules')"><span>Épaules</span> 🛡️</div>
+                <div class="slot-item" onclick="selectSlot('Plastron')"><span>Plastron</span> 🛡️</div>
+                <div class="slot-item" onclick="selectSlot('Jambières')"><span>Jambières</span> 🛡️</div>
+                <div class="slot-item" onclick="selectSlot('Arme Principale')"><span>Arme 2M / 1M</span> ⚔️</div>
+            </div>
+        </div>
+        <div class="panel item-details" id="itemDetailsPanel">
+            <h4 id="itemName">Heaume du Jugement Éternel</h4>
+            <p><strong>Emplacement :</strong> Tête</p>
+            <p><strong>Source :</strong> Donjon Donjon 60+ (Boss de fin)</p>
+            <p><strong>Statistiques :</strong> +24 Force, +18 Endurance, +12 Esprit. Augmente les chances de coup critique de 1%.</p>
+            <p><em>Idéal pour démarrer les raids de la phase 1 sur Forever avec un maximum de potentiel offensif.</em></p>
+        </div>
+    </div>
+</div>
+
 <script>
-    // Base de données structurée avec des arbres de talents plus complets (ex: Paladin mis en avant)
+    // Données des talents
     const gameData = {
         Paladin: { 
             trees: ["Sacré", "Protection", "Vindicte"], 
             talents: [
-                // Arbre Sacré (tree: 0)
                 {name: "Divinité divine", max: 5, desc: "+2% efficacité des soins", tree: 0},
                 {name: "Grâce spirituelle", max: 3, desc: "-3% coût en mana des sorts", tree: 0},
                 {name: "Faveur lumineuse", max: 5, desc: "+1% critique sorts de soins", tree: 0},
-                {name: "Illumination", max: 5, desc: "+2% mana récupérée sur critique", tree: 0},
-                {name: "Imposition des mains am.", max: 2, desc: "-15m CD Imposition", tree: 0},
-                
-                // Arbre Protection (tree: 1)
                 {name: "Bénédiction renforcée", max: 5, desc: "+2% armure totale", tree: 1},
                 {name: "Bouclier de foi", max: 3, desc: "+1% blocage de bouclier", tree: 1},
                 {name: "Expertise en défense", max: 5, desc: "+2 aptitude à la défense", tree: 1},
-                {name: "Garde purifiée", max: 3, desc: "+3% résistance aux sorts", tree: 1},
-                {name: "Vengeance sacrée", max: 5, desc: "+2% menace générée", tree: 1},
-
-                // Arbre Vindicte (tree: 2)
                 {name: "Bénédiction de puissance", max: 5, desc: "+2% puissance d'attaque", tree: 2},
                 {name: "Conviction", max: 5, desc: "+1% chance de coup critique", tree: 2},
-                {name: "Sceau renforcé", max: 3, desc: "+3% dégâts des sceaux", tree: 2},
-                {name: "Croisade", max: 3, desc: "+2% dégâts physiques globaux", tree: 2},
-                {name: "Jugement implacable", max: 2, desc: "-1s temps de recharge Jugement", tree: 2}
+                {name: "Croisade", max: 3, desc: "+2% dégâts physiques globaux", tree: 2}
             ]
         },
         Guerrier: { 
@@ -324,16 +418,14 @@
                 {name: "Maîtrise des armes", max: 5, desc: "+2% dégâts critiques", tree: 0},
                 {name: "Empalement", max: 2, desc: "+10% dégâts critiques", tree: 0},
                 {name: "Cruauté", max: 5, desc: "+1% chance de coup critique", tree: 1},
-                {name: "Flurry", max: 5, desc: "+3% hâte après un critique", tree: 1},
-                {name: "Anticipation", max: 5, desc: "+2% esquive", tree: 2},
-                {name: "Maîtrise du blocage", max: 1, desc: "Permet de bloquer un coup supplémentaire", tree: 2}
+                {name: "Flurry", max: 5, desc: "+3% hâte après critique", tree: 1},
+                {name: "Anticipation", max: 5, desc: "+2% esquive", tree: 2}
             ]
         },
         Chasseur: { 
             trees: ["Maîtrise des bêtes", "Précision", "Survie"], 
             talents: [
                 {name: "Endurance du faucon", max: 5, desc: "+3% santé du familier", tree: 0},
-                {name: "Fureur bestiale", max: 1, desc: "Dégâts du familier augmentés", tree: 0},
                 {name: "Tir mortel", max: 5, desc: "+1% dégâts à distance", tree: 1},
                 {name: "Visée", max: 5, desc: "+1% dégâts visés", tree: 1},
                 {name: "Survie pure", max: 5, desc: "+2% agilité", tree: 2}
@@ -343,7 +435,6 @@
             trees: ["Assassinat", "Combat", "Finesse"], 
             talents: [
                 {name: "Malice", max: 5, desc: "+1% critique", tree: 0},
-                {name: "Sang-froid", max: 1, desc: "Prochain coup critique garanti", tree: 0},
                 {name: "Précision", max: 5, desc: "+1% score de toucher", tree: 1},
                 {name: "Opportunité", max: 5, desc: "+4% dégâts ambidextrie", tree: 2}
             ]
@@ -353,15 +444,13 @@
             talents: [
                 {name: "Indomptable", max: 5, desc: "+2% mana max", tree: 0},
                 {name: "Spécialisation Soin", max: 5, desc: "+2% efficacité soins", tree: 1},
-                {name: "Affinité obscurité", max: 5, desc: "+2% dégâts ombre", tree: 2},
-                {name: "Forme d'ombre", max: 1, desc: "Augmente les dégâts d'ombre de 15%", tree: 2}
+                {name: "Affinité obscurité", max: 5, desc: "+2% dégâts ombre", tree: 2}
             ]
         },
         Chaman: { 
             trees: ["Élémentaire", "Amélioration", "Restauration"], 
             talents: [
                 {name: "Convection", max: 5, desc: "-2% coût mana sorts", tree: 0},
-                {name: "Maîtrise des éléments", max: 1, desc: "-100% coût mana prochain sort", tree: 0},
                 {name: "Flurry", max: 5, desc: "+3% hâte en mêlée", tree: 1},
                 {name: "Totems affinés", max: 5, desc: "+15% portée totems", tree: 2}
             ]
@@ -369,36 +458,42 @@
         Mage: { 
             trees: ["Arcane", "Feu", "Givre"], 
             talents: [
-                {name: "Subtilité arcane", max: 5, desc: "-2% menace générée", tree: 0},
+                {name: "Subtilité arcane", max: 5, desc: "-2% menace", tree: 0},
                 {name: "Incinération", max: 5, desc: "+2% dégâts sorts feu", tree: 1},
-                {name: "Pyromane", max: 3, desc: "+1% critique sorts de feu", tree: 1},
                 {name: "Piétinement givre", max: 5, desc: "+2% dégâts givre", tree: 2}
             ]
         },
         Démoniste: { 
             trees: ["Affliction", "Démonologie", "Destruction"], 
             talents: [
-                {name: "Corruption rapide", max: 5, desc: "-0.4s incantation Corruption", tree: 0},
-                {name: "Santé démoniaque", max: 5, desc: "+3% endurance du démon", tree: 1},
-                {name: "Cataclysme", max: 5, desc: "+2% dégâts sorts destruction", tree: 2}
+                {name: "Corruption rapide", max: 5, desc: "-0.4s incantation", tree: 0},
+                {name: "Santé démoniaque", max: 5, desc: "+3% endurance démon", tree: 1},
+                {name: "Cataclysme", max: 5, desc: "+2% dégâts destruction", tree: 2}
             ]
         },
         Druide: { 
             trees: ["Équilibre", "Combat farouche", "Restauration"], 
             talents: [
                 {name: "Grâce nature", max: 5, desc: "-0.1s incantation", tree: 0},
-                {name: "Fureur sauvage", max: 5, desc: "+2 rage/énergie de départ", tree: 1},
-                {name: "Don de la nature", max: 5, desc: "+2% bonus aux soins", tree: 2}
+                {name: "Fureur sauvage", max: 5, desc: "+2 rage/énergie", tree: 1},
+                {name: "Don de la nature", max: 5, desc: "+2% bonus soins", tree: 2}
             ]
         }
     };
 
     let currentClass = "Paladin";
     let currentTreeIndex = 0;
-    let talentPoints = {}; 
+    let talentPoints = {};
     let savedBuilds = { 1: null, 2: null };
 
-    function init() {
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    function initSim() {
         renderClasses();
         selectClass(currentClass);
     }
@@ -406,26 +501,22 @@
     function renderClasses() {
         const grid = document.getElementById("classGrid");
         grid.innerHTML = "";
-        Object.keys(gameData).forEach(className => {
+        Object.keys(gameData).forEach(cls => {
             const btn = document.createElement("button");
-            btn.className = `class-btn ${className === currentClass ? "active" : ""}`;
-            btn.innerText = className;
-            btn.onclick = () => selectClass(className);
+            btn.className = `class-btn ${cls === currentClass ? "active" : ""}`;
+            btn.innerText = cls;
+            btn.onclick = () => selectClass(cls);
             grid.appendChild(btn);
         });
     }
 
-    function selectClass(className) {
-        currentClass = className;
+    function selectClass(cls) {
+        currentClass = cls;
         currentTreeIndex = 0;
-        
-        if (!talentPoints[className]) {
-            talentPoints[className] = {};
-            gameData[className].talents.forEach((t, idx) => {
-                talentPoints[className][idx] = 0;
-            });
+        if (!talentPoints[cls]) {
+            talentPoints[cls] = {};
+            gameData[cls].talents.forEach((_, idx) => talentPoints[cls][idx] = 0);
         }
-        
         renderClasses();
         renderTabs();
         renderTalents();
@@ -433,11 +524,9 @@
     }
 
     function renderTabs() {
-        const tabsContainer = document.getElementById("treeTabs");
-        tabsContainer.innerHTML = "";
-        const trees = gameData[currentClass].trees;
-        
-        trees.forEach((treeName, idx) => {
+        const container = document.getElementById("treeTabs");
+        container.innerHTML = "";
+        gameData[currentClass].trees.forEach((treeName, idx) => {
             const tab = document.createElement("div");
             tab.className = `tree-tab ${idx === currentTreeIndex ? "active" : ""}`;
             tab.innerText = treeName;
@@ -446,30 +535,88 @@
                 renderTabs();
                 renderTalents();
             };
-            tabsContainer.appendChild(tab);
+            container.appendChild(tab);
         });
     }
 
     function renderTalents() {
         const list = document.getElementById("talentsList");
         list.innerHTML = "";
-        
-        const classData = gameData[currentClass];
-        classData.talents.forEach((talent, idx) => {
-            if (talent.tree === currentTreeIndex) {
-                const points = talentPoints[currentClass][idx] || 0;
-                
+        gameData[currentClass].talents.forEach((t, idx) => {
+            if (t.tree === currentTreeIndex) {
+                const pts = talentPoints[currentClass][idx] || 0;
                 const card = document.createElement("div");
                 card.className = "talent-card";
                 card.innerHTML = `
                     <div class="talent-info">
-                        <h3>${talent.name}</h3>
-                        <p>${talent.desc}</p>
+                        <h4>${t.name}</h4>
+                        <p>${t.desc}</p>
                     </div>
                     <div class="talent-controls">
                         <button onclick="changePoints(${idx}, -1)">-</button>
-                        <span>${points}/${talent.max}</span>
+                        <span>${pts}/${t.max}</span>
                         <button onclick="changePoints(${idx}, 1)">+</button>
                     </div>
                 `;
-                list.appendChild(card
+                list.appendChild(card);
+            }
+        });
+    }
+
+    function changePoints(idx, delta) {
+        const current = talentPoints[currentClass][idx];
+        const max = gameData[currentClass].talents[idx].max;
+        const total = Object.values(talentPoints[currentClass]).reduce((a,b)=>a+b, 0);
+
+        if (delta > 0 && total >= 51) return;
+        const next = current + delta;
+        if (next >= 0 && next <= max) {
+            talentPoints[currentClass][idx] = next;
+            renderTalents();
+            updateStats();
+        }
+    }
+
+    function updateStats() {
+        const total = Object.values(talentPoints[currentClass]).reduce((a,b)=>a+b, 0);
+        document.getElementById("pointsUsed").innerText = total;
+        document.getElementById("dpsScore").innerText = 1000 + (total * 40);
+    }
+
+    function saveBuild(slot) {
+        const total = Object.values(talentPoints[currentClass]).reduce((a,b)=>a+b, 0);
+        const dps = document.getElementById("dpsScore").innerText;
+        savedBuilds[slot] = { cls: currentClass, pts: total, dps: dps };
+        
+        document.getElementById(`b1View`).innerHTML = savedBuilds[1] ? `<strong>Build 1</strong><br><span>${savedBuilds[1].cls} (${savedBuilds[1].pts}p)<br>${savedBuilds[1].dps} DPS</span>` : `<strong>Build 1</strong><br><span>Aucun</span>`;
+        document.getElementById(`b2View`).innerHTML = savedBuilds[2] ? `<strong>Build 2</strong><br><span>${savedBuilds[2].cls} (${savedBuilds[2].pts}p)<br>${savedBuilds[2].dps} DPS</span>` : `<strong>Build 2</strong><br><span>Aucun</span>`;
+    }
+
+    function selectSlot(slotName) {
+        document.querySelectorAll('.slot-item').forEach(el => el.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        
+        const details = {
+            'Tête': {name: 'Heaume du Jugement Éternel', src: 'Donjon 60+ (Boss final)', stats: '+24 Force, +18 Endurance, +1% Critique.'},
+            'Épaules': {name: 'Spallières de Puissance Souveraine', src: 'Artisanat / Boss de Raid P1', stats: '+18 Force, +12 Agilité, +10 Endurance.'},
+            'Plastron': {name: 'Cuirasse de Vaillance Retravaillée', src: 'Donjon épique Forever', stats: '+32 Force, +22 Endurance, +2% Armure.'},
+            'Jambières': {name: 'Grèves du Croisé Ancien', src: 'Quête longue / Réputation', stats: '+26 Force, +20 Endurance, +1% Toucher.'},
+            'Arme Principale': {name: 'Lame-Tonnerre (Version Forever)', src: 'Camagne de Raid légendaire', stats: 'Dégâts de nature, Vitesse rapide, +Proc Éclair.'}
+        };
+
+        const item = details[slotName];
+        document.getElementById('itemName').innerText = item.name;
+        document.getElementById('itemDetailsPanel').innerHTML = `
+            <h4>${item.name}</h4>
+            <p><strong>Emplacement :</strong> ${slotName}</p>
+            <p><strong>Source :</strong> ${item.src}</p>
+            <p><strong>Statistiques :</strong> ${item.stats}</p>
+            <p><em>Pièce indispensable pour maximiser l'efficacité de votre personnage sur cette version.</em></p>
+        `;
+    }
+
+    initSim();
+</script>
+
+</body>
+</html>
