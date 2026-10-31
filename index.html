@@ -12,7 +12,6 @@
             --accent-gold: #f4c430;
             --text-main: #e2e8f0;
             --text-muted: #94a3b8;
-            --paladin-color: #f58cba;
         }
 
         * {
@@ -69,17 +68,17 @@
         .classes-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 16px;
+            gap: 6px;
+            margin-bottom: 14px;
         }
 
         .class-btn {
             background: #212833;
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 8px;
+            padding: 6px;
             border-radius: 6px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
@@ -100,7 +99,7 @@
             padding: 10px 14px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             font-size: 0.9rem;
         }
 
@@ -140,8 +139,8 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            margin-bottom: 16px;
-            max-height: 250px;
+            margin-bottom: 14px;
+            max-height: 280px;
             overflow-y: auto;
             padding-right: 4px;
         }
@@ -190,7 +189,7 @@
 
         .talent-controls span {
             font-size: 0.85rem;
-            min-width: 20px;
+            min-width: 24px;
             text-align: center;
         }
 
@@ -200,7 +199,6 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 12px;
-            margin-top: 12px;
         }
 
         .comparator-buttons {
@@ -252,7 +250,7 @@
 
 <div class="container">
     <header>
-        <h1>WoW Forever - Build & DPS</h1>
+        <h1>WoW Forever - Talents & DPS</h1>
         <p>Simulateur mobile optimisé</p>
     </header>
 
@@ -293,53 +291,106 @@
 </div>
 
 <script>
-    // Données de test pour les classes et arbres
+    // Base de données structurée avec des arbres de talents plus complets (ex: Paladin mis en avant)
     const gameData = {
-        Guerrier: { trees: ["Armes", "Fureur", "Protection"], talents: [
-            {name: "Maîtrise des armes", max: 5, desc: "+2% dégâts critiques", tree: 0},
-            {name: "Cruauté", max: 5, desc: "+1% chance de coup critique", tree: 1},
-            {name: "anticipation", max: 5, desc: "+2% esquive", tree: 2}
-        ]},
-        Paladin: { trees: ["Sacré", "Protection", "Vindicte"], talents: [
-            {name: "Grâce divine", max: 5, desc: "-2% temps d'incantation", tree: 0},
-            {name: "Bénédiction renforcée", max: 5, desc: "+2% armure", tree: 1},
-            {name: "Conviction", max: 5, desc: "+1% critique par point", tree: 2}
-        ]},
-        Chasseur: { trees: ["Maîtrise des bêtes", "Précision", "Survie"], talents: [
-            {name: "Endurance du faucon", max: 5, desc: "+3% santé fam.", tree: 0},
-            {name: "Tir mortel", max: 5, desc: "+1% dégâts distance", tree: 1},
-            {name: "Survie pure", max: 5, desc: "+2% agilité", tree: 2}
-        ]},
-        Voleur: { trees: ["Assassinat", "Combat", "Finesse"], talents: [
-            {name: "Malice", max: 5, desc: "+1% critique", tree: 0},
-            {name: "Précision", max: 5, desc: "+1% toucher", tree: 1},
-            {name: "Opportunité", max: 5, desc: "+4% dégâts ambidextrie", tree: 2}
-        ]},
-        Prêtre: { trees: ["Discipline", "Sacré", "Ombre"], talents: [
-            {name: "Indomptable", max: 5, desc: "+2% mana max", tree: 0},
-            {name: "Spécialisation Soin", max: 5, desc: "+2% efficacité soins", tree: 1},
-            {name: "Affinité obscurité", max: 5, desc: "+2% dégâts ombre", tree: 2}
-        ]},
-        Chaman: { trees: ["Élémentaire", "Amélioration", "Restauration"], talents: [
-            {name: "Convection", max: 5, desc: "-2% coût mana sorts", tree: 0},
-            {name: "Flurry", max: 5, desc: "+3% hâte après critique", tree: 1},
-            {name: "Totems affinés", max: 5, desc: "+15% portée totems", tree: 2}
-        ]},
-        Mage: { trees: ["Arcane", "Feu", "Givre"], talents: [
-            {name: "Subtilité arcane", max: 5, desc: "-2% menace", tree: 0},
-            {name: "Incinération", max: 5, desc: "+2% dégâts sorts feu", tree: 1},
-            {name: "Piétinement givre", max: 5, desc: "+2% dégâts givre", tree: 2}
-        ]},
-        Démoniste: { trees: ["Affliction", "Démonologie", "Destruction"], talents: [
-            {name: "Corruption rapide", max: 5, desc: "-0.4s incantation", tree: 0},
-            {name: "Santé démoniaque", max: 5, desc: "+3% endurance démon", tree: 1},
-            {name: "Cataclysme", max: 5, desc: "+2% dégâts destruction", tree: 2}
-        ]},
-        Druide: { trees: ["Équilibre", "Combat farouche", "Restauration"], talents: [
-            {name: "Grâce nature", max: 5, desc: "-0.1s incantation", tree: 0},
-            {name: "Fureur sauvage", max: 5, desc: "+2 rage/énergie", tree: 1},
-            {name: "Don de la nature", max: 5, desc: "+2% bonus soins", tree: 2}
-        ]}
+        Paladin: { 
+            trees: ["Sacré", "Protection", "Vindicte"], 
+            talents: [
+                // Arbre Sacré (tree: 0)
+                {name: "Divinité divine", max: 5, desc: "+2% efficacité des soins", tree: 0},
+                {name: "Grâce spirituelle", max: 3, desc: "-3% coût en mana des sorts", tree: 0},
+                {name: "Faveur lumineuse", max: 5, desc: "+1% critique sorts de soins", tree: 0},
+                {name: "Illumination", max: 5, desc: "+2% mana récupérée sur critique", tree: 0},
+                {name: "Imposition des mains am.", max: 2, desc: "-15m CD Imposition", tree: 0},
+                
+                // Arbre Protection (tree: 1)
+                {name: "Bénédiction renforcée", max: 5, desc: "+2% armure totale", tree: 1},
+                {name: "Bouclier de foi", max: 3, desc: "+1% blocage de bouclier", tree: 1},
+                {name: "Expertise en défense", max: 5, desc: "+2 aptitude à la défense", tree: 1},
+                {name: "Garde purifiée", max: 3, desc: "+3% résistance aux sorts", tree: 1},
+                {name: "Vengeance sacrée", max: 5, desc: "+2% menace générée", tree: 1},
+
+                // Arbre Vindicte (tree: 2)
+                {name: "Bénédiction de puissance", max: 5, desc: "+2% puissance d'attaque", tree: 2},
+                {name: "Conviction", max: 5, desc: "+1% chance de coup critique", tree: 2},
+                {name: "Sceau renforcé", max: 3, desc: "+3% dégâts des sceaux", tree: 2},
+                {name: "Croisade", max: 3, desc: "+2% dégâts physiques globaux", tree: 2},
+                {name: "Jugement implacable", max: 2, desc: "-1s temps de recharge Jugement", tree: 2}
+            ]
+        },
+        Guerrier: { 
+            trees: ["Armes", "Fureur", "Protection"], 
+            talents: [
+                {name: "Maîtrise des armes", max: 5, desc: "+2% dégâts critiques", tree: 0},
+                {name: "Empalement", max: 2, desc: "+10% dégâts critiques", tree: 0},
+                {name: "Cruauté", max: 5, desc: "+1% chance de coup critique", tree: 1},
+                {name: "Flurry", max: 5, desc: "+3% hâte après un critique", tree: 1},
+                {name: "Anticipation", max: 5, desc: "+2% esquive", tree: 2},
+                {name: "Maîtrise du blocage", max: 1, desc: "Permet de bloquer un coup supplémentaire", tree: 2}
+            ]
+        },
+        Chasseur: { 
+            trees: ["Maîtrise des bêtes", "Précision", "Survie"], 
+            talents: [
+                {name: "Endurance du faucon", max: 5, desc: "+3% santé du familier", tree: 0},
+                {name: "Fureur bestiale", max: 1, desc: "Dégâts du familier augmentés", tree: 0},
+                {name: "Tir mortel", max: 5, desc: "+1% dégâts à distance", tree: 1},
+                {name: "Visée", max: 5, desc: "+1% dégâts visés", tree: 1},
+                {name: "Survie pure", max: 5, desc: "+2% agilité", tree: 2}
+            ]
+        },
+        Voleur: { 
+            trees: ["Assassinat", "Combat", "Finesse"], 
+            talents: [
+                {name: "Malice", max: 5, desc: "+1% critique", tree: 0},
+                {name: "Sang-froid", max: 1, desc: "Prochain coup critique garanti", tree: 0},
+                {name: "Précision", max: 5, desc: "+1% score de toucher", tree: 1},
+                {name: "Opportunité", max: 5, desc: "+4% dégâts ambidextrie", tree: 2}
+            ]
+        },
+        Prêtre: { 
+            trees: ["Discipline", "Sacré", "Ombre"], 
+            talents: [
+                {name: "Indomptable", max: 5, desc: "+2% mana max", tree: 0},
+                {name: "Spécialisation Soin", max: 5, desc: "+2% efficacité soins", tree: 1},
+                {name: "Affinité obscurité", max: 5, desc: "+2% dégâts ombre", tree: 2},
+                {name: "Forme d'ombre", max: 1, desc: "Augmente les dégâts d'ombre de 15%", tree: 2}
+            ]
+        },
+        Chaman: { 
+            trees: ["Élémentaire", "Amélioration", "Restauration"], 
+            talents: [
+                {name: "Convection", max: 5, desc: "-2% coût mana sorts", tree: 0},
+                {name: "Maîtrise des éléments", max: 1, desc: "-100% coût mana prochain sort", tree: 0},
+                {name: "Flurry", max: 5, desc: "+3% hâte en mêlée", tree: 1},
+                {name: "Totems affinés", max: 5, desc: "+15% portée totems", tree: 2}
+            ]
+        },
+        Mage: { 
+            trees: ["Arcane", "Feu", "Givre"], 
+            talents: [
+                {name: "Subtilité arcane", max: 5, desc: "-2% menace générée", tree: 0},
+                {name: "Incinération", max: 5, desc: "+2% dégâts sorts feu", tree: 1},
+                {name: "Pyromane", max: 3, desc: "+1% critique sorts de feu", tree: 1},
+                {name: "Piétinement givre", max: 5, desc: "+2% dégâts givre", tree: 2}
+            ]
+        },
+        Démoniste: { 
+            trees: ["Affliction", "Démonologie", "Destruction"], 
+            talents: [
+                {name: "Corruption rapide", max: 5, desc: "-0.4s incantation Corruption", tree: 0},
+                {name: "Santé démoniaque", max: 5, desc: "+3% endurance du démon", tree: 1},
+                {name: "Cataclysme", max: 5, desc: "+2% dégâts sorts destruction", tree: 2}
+            ]
+        },
+        Druide: { 
+            trees: ["Équilibre", "Combat farouche", "Restauration"], 
+            talents: [
+                {name: "Grâce nature", max: 5, desc: "-0.1s incantation", tree: 0},
+                {name: "Fureur sauvage", max: 5, desc: "+2 rage/énergie de départ", tree: 1},
+                {name: "Don de la nature", max: 5, desc: "+2% bonus aux soins", tree: 2}
+            ]
+        }
     };
 
     let currentClass = "Paladin";
@@ -368,7 +419,6 @@
         currentClass = className;
         currentTreeIndex = 0;
         
-        // Initialiser les points de talents pour la classe
         if (!talentPoints[className]) {
             talentPoints[className] = {};
             gameData[className].talents.forEach((t, idx) => {
@@ -422,63 +472,4 @@
                         <button onclick="changePoints(${idx}, 1)">+</button>
                     </div>
                 `;
-                list.appendChild(card);
-            }
-        });
-    }
-
-    function changePoints(talentIdx, delta) {
-        const classTalents = talentPoints[currentClass];
-        const currentPoints = classTalents[talentIdx];
-        const maxPoints = gameData[currentClass].talents[talentIdx].max;
-        
-        const totalUsed = getTotalPoints();
-        
-        if (delta > 0 && totalUsed >= 51) return; // Limite 51 points
-        
-        const newPoints = currentPoints + delta;
-        if (newPoints >= 0 && newPoints <= maxPoints) {
-            classTalents[talentIdx] = newPoints;
-            renderTalents();
-            updateStats();
-        }
-    }
-
-    function getTotalPoints() {
-        const classTalents = talentPoints[currentClass];
-        return Object.values(classTalents).reduce((a, b) => a + b, 0);
-    }
-
-    function updateStats() {
-        const total = getTotalPoints();
-        document.getElementById("pointsUsed").innerText = total;
-        
-        // Calcul du DPS dynamique simple
-        const baseDps = 1000;
-        const dpsBonus = total * 35;
-        document.getElementById("dpsScore").innerText = baseDps + dpsBonus;
-    }
-
-    function saveBuild(slot) {
-        const total = getTotalPoints();
-        const dps = document.getElementById("dpsScore").innerText;
-        savedBuilds[slot] = {
-            className: currentClass,
-            points: total,
-            dps: dps
-        };
-        
-        document.getElementById(`build1Display`).innerHTML = savedBuilds[1] ? 
-            `<h4>Build 1</h4><div>${savedBuilds[1].className}<br><b>${savedBuilds[1].points} pts</b><br>${savedBuilds[1].dps} DPS</div>` : 
-            `<h4>Build 1</h4><div>Aucun</div>`;
-            
-        document.getElementById(`build2Display`).innerHTML = savedBuilds[2] ? 
-            `<h4>Build 2</h4><div>${savedBuilds[2].className}<br><b>${savedBuilds[2].points} pts</b><br>${savedBuilds[2].dps} DPS</div>` : 
-            `<h4>Build 2</h4><div>Aucun</div>`;
-    }
-
-    init();
-</script>
-
-</body>
-</html>
+                list.appendChild(card
